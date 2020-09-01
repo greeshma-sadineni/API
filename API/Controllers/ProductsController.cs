@@ -35,46 +35,34 @@ namespace API.Controllers
         };
 
         [HttpGet]
-        public  ActionResult<IEnumerable<Product>> Get()
+        public IEnumerable<Product> Get()
         {
             return products;
         }
 
         [HttpGet("{Id}")]
-        public ActionResult<Product> Get(int id)
+        public Product Get(int id)
         {
             var product = products.Find(p => p.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+          
             return product;
         }
 
 
         //Add New Product
         [HttpPost]
-        public ActionResult Post([FromBody]Product product)
+        public void Post([FromBody]Product product)
         {
-            if (products.Exists(p => p.Id == product.Id))
-            {
-                return Conflict();
-            }
             products.Add(product);
-            return CreatedAtAction(nameof(Get), new { id = product.Id }, products);
         }
+
 
         //Delete the Product
         [HttpDelete("{Id}")]
-        public ActionResult<IEnumerable<Product>> Delete(int id)
+        public void Delete(int id)
         {
             var product = products.Where(p => p.Id == id);
-            if(product==null)
-            {
-                return NotFound();
-            }
             products = products.Except(product).ToList();
-            return products;
         }
         //Update Product
         [HttpPut("{Id}")]
